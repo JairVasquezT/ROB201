@@ -14,13 +14,15 @@ def reactive_obst_avoid(lidar):
     laser_dist = lidar.get_sensor_values()
     laser_angles = lidar.get_ray_angles()
 
-    if np.min(laser_dist) < 12:
-        speed = 0.1
+    if np.min(laser_dist) < 10 and (laser_angles[np.argmin(laser_dist)] < 1.2 and laser_angles[np.argmin(laser_dist)] > -1.2):
+        print("Obstacle detected at distance: ", np.min(laser_dist))
+        print("Obstacle angle: ", laser_angles[np.argmin(laser_dist)])
+        speed = 0.2*(10-np.min(laser_dist))/10
         if laser_angles[np.argmin(laser_dist)] > 0:
-            rotation_speed = -1.0
-        else: rotation_speed = 1.0
+            rotation_speed = -0.5*(10-np.min(laser_dist))/10
+        else: rotation_speed = 0.5*(10-np.min(laser_dist))/10
     else:
-        speed = 0.5
+        speed = 0.2
         rotation_speed = 0.0
 
     command = {"forward": speed,

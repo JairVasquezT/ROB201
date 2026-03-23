@@ -1,5 +1,7 @@
 """ A simple SLAM demonstration using the "placebot" robot simulator """
 
+import cProfile
+
 from place_bot.simulation.ray_sensors.lidar import LidarParams
 from place_bot.simulation.robot.odometer import OdometerParams
 from place_bot.simulation.gui_map.simulator import Simulator
@@ -33,4 +35,10 @@ if __name__ == '__main__':
     simulator = Simulator(the_world=my_world,
                           use_keyboard=False)
 
+    pr = cProfile.Profile()
+    pr.enable()
+
     simulator.run()
+    
+    pr.disable()
+    pr.print_stats(sort='time')
