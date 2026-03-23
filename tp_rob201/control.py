@@ -42,8 +42,32 @@ def potential_field_control(lidar, current_pose, goal_pose):
     on initial pose, x forward, y on left)
     """
     # TODO for TP2
+    laser_dist = lidar.get_sensor_values()
+    laser_angles = lidar.get_ray_angles()
 
-    command = {"forward": 0,
-               "rotation": 0}
+    vect_goal = goal_pose[:2] - current_pose[:2]
+    dist=np.linalg.norm(vect_goal)
+    rot=np.arctan2(vect_goal[1], vect_goal[0])-current_pose[2]
+    rot = (rot + np.pi) % (2 * np.pi) - np.pi
+    k_goal=0.5
+    k_rot=0.1
+    if dist < 80:
+        k_goal=dist/80*k_goal
+        if dist < 5:
+            print("Proche du but, ralentissement")
+            k_goal=0
+            rot=goal_pose[2]-current_pose[2]
+            rot = (rot + np.pi) % (2 * np.pi) - np.pi
+            k_rot=0.1
+            if rot < 0.05 and rot > -0.05:
+                k_rot=0
+                k_goal=0
+                print("Goal reached")
+        
+    
+    
+
+    command = {"forward": k_goal,
+               "rotation": k_rot*rot}
 
     return command

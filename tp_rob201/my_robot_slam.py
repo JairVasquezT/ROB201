@@ -3,6 +3,7 @@ Robot controller definition
 Complete controller including SLAM, planning, path following
 """
 import numpy as np
+import random
 
 from place_bot.simulation.robot.robot_abstract import RobotAbstract
 from place_bot.simulation.robot.odometer import OdometerParams
@@ -50,7 +51,7 @@ class MyRobotSlam(RobotAbstract):
         """
         Main control function executed at each time step
         """
-        return self.control_tp1()
+        return self.control_tp2()
 
     def control_tp1(self):
         """
@@ -69,7 +70,8 @@ class MyRobotSlam(RobotAbstract):
         Main control function with full SLAM, random exploration and path planning
         """
         pose = self.odometer_values()
-        goal = [0,0,0]
+        #goal = np.array([random.uniform(0, 100), random.uniform(0, 300), 0])
+        goal = np.array([-50, -450, 1])
 
         # Compute new command speed to perform obstacle avoidance
         command = potential_field_control(self.lidar(), pose, goal)
