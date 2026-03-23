@@ -63,11 +63,29 @@ def potential_field_control(lidar, current_pose, goal_pose):
                 k_rot=0
                 k_goal=0
                 print("Goal reached")
-        
-    
-    
+    d_safe=30 
+    k_rep=0
+    obs=(laser_dist<d_safe)&(laser_dist>0.1)
+    dist_obs=laser_dist[obs]
+
+    angle_obs=laser_angles[obs]
+    mag=0
+    f_rep_x=0
+    f_rep_y=0
+    rot_rep=0
+    k_rep=0.2
+    if len(dist_obs)>0:
+        print("Obstacle: ", dist_obs)
+        print("Obstacle angle: ", angle_obs)
+        obs_x=dist_obs*np.cos(angle_obs)
+        obs_y=dist_obs*np.sin(angle_obs)
+
+        mag=(0.5/(dist_obs)**3)*(1/dist_obs-1/20)
+        f_rep_x = np.sum(mag * -obs_x)
+        f_rep_y = np.sum(mag * -obs_y)
+        rot_rep+=k_rep*np.arctan2(f_rep_y, f_rep_x)
 
     command = {"forward": k_goal,
-               "rotation": k_rot*rot}
+               "rotation": k_rot*rot+rot_rep}
 
     return command

@@ -71,7 +71,7 @@ class MyRobotSlam(RobotAbstract):
         """
         pose = self.odometer_values()
         #goal = np.array([random.uniform(0, 100), random.uniform(0, 300), 0])
-        goal = np.array([-50, -450, 1])
+        goal = np.array([-300, -450, 1])
 
         # Compute new command speed to perform obstacle avoidance
         command = potential_field_control(self.lidar(), pose, goal)
