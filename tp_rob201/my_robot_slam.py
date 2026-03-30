@@ -76,4 +76,9 @@ class MyRobotSlam(RobotAbstract):
         # Compute new command speed to perform obstacle avoidance
         command = potential_field_control(self.lidar(), pose, goal)
 
+        self.tiny_slam.update_map(self.lidar(), pose)
+        self.counter += 1
+        if self.counter % 10 == 0:
+            self.tiny_slam.grid.display_cv(pose, goal=goal)
+
         return command

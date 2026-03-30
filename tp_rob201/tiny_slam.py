@@ -57,18 +57,29 @@ class TinySlam:
         lidar : placebot object with lidar data
         pose : [x, y, theta] nparray, corrected pose in world coordinates
         """
-        # TODO for TP3
+
+        ranges = lidar.get_sensor_values()
+        angles = lidar.get_ray_angles()
+
+        x_abs = pose [0] + ranges * np.cos(angles + pose[2])  
+        y_abs = pose [1] + ranges * np.sin(angles + pose[2])
+        for x, y in zip(x_abs, y_abs):
+            self.grid.add_value_along_line(pose[0], pose[1], x, y, -0.1)
+            
+        self.grid.add_map_points(x_abs, y_abs, 0.5)
+        np.clip(self.grid.occupancy_map, -20, 20, out=self.grid.occupancy_map)
 
     def compute(self):
         """ Useless function, just for the exercise on using the profiler """
         # Remove after TP1
-
-        ranges = np.random.rand(3600)
-        ray_angles = np.arange(-np.pi, np.pi, np.pi / 1800)
+        
+        #ranges = np.random.rand(3600)
+        #ray_angles = np.arange(-np.pi, np.pi, np.pi / 1800)
 
         # Poor implementation of polar to cartesian conversion
-        points = []
-        for i in range(3600):
-            pt_x = ranges[i] * np.cos(ray_angles[i])
-            pt_y = ranges[i] * np.sin(ray_angles[i])
-            points.append([pt_x, pt_y])
+        #points = []
+        #for i in range(3600):
+        #    pt_x = ranges[i] * np.cos(ray_angles[i])
+        #    pt_y = ranges[i] * np.sin(ray_angles[i])
+        #    points.append([pt_x, pt_y])
+        

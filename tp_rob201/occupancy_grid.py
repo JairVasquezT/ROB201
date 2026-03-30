@@ -230,4 +230,4 @@ class OccupancyGrid:
         Load map from pickle object
         filename : base name (without extension) of file on disk
         """
-        # TODO
+        # TODO 
